@@ -6,9 +6,10 @@ public class CustomerModel {
     private int age;
     private boolean isActive;
 
-    //Constructor
+    //Default Constructor
     public CustomerModel() { }
 
+    //Parameterized constructor
     public CustomerModel(int id, String name, int age, boolean isActive) {
         this.id = id;
         this.name = name;
