@@ -3,6 +3,7 @@ package com.example.sqlitewithandroiddemo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,11 +46,23 @@ public class MainActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CustomerModel customerModel = null;
                 try {
-                    CustomerModel customerModel = new CustomerModel(1, name.getText().toString(), Integer.parseInt(age.getText().toString()), isActive.isChecked());
+                    customerModel = new CustomerModel(1, name.getText().toString(), Integer.parseInt(age.getText().toString()), isActive.isChecked());
                     Toast.makeText(getApplicationContext(), customerModel.toString(), Toast.LENGTH_LONG).show();
                 } catch(Exception e) {
                     Toast.makeText(getApplicationContext(), "There was an error creating the customer", Toast.LENGTH_LONG).show();
+                    customerModel = new CustomerModel(-1, "Error", 0, false );
+                }
+
+                DatabaseHelper dbh = new DatabaseHelper(getApplicationContext());
+                boolean success = dbh.addOneRecord(customerModel);
+
+                if(success) {
+                    reload();
+                    Toast.makeText(getApplicationContext(), "Successfully added customer record", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "There was an error adding customer record", Toast.LENGTH_LONG).show();
                 }
             }
         });
