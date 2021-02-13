@@ -45,7 +45,12 @@ public class MainActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Add", Toast.LENGTH_LONG).show();
+                try {
+                    CustomerModel customerModel = new CustomerModel(1, name.getText().toString(), Integer.parseInt(age.getText().toString()), isActive.isChecked());
+                    Toast.makeText(getApplicationContext(), customerModel.toString(), Toast.LENGTH_LONG).show();
+                } catch(Exception e) {
+                    Toast.makeText(getApplicationContext(), "There was an error creating the customer", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -62,5 +67,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Delete", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void reload() {
+        name.setText("");
+        age.setText("");
+        isActive.setChecked(false);
     }
 }
