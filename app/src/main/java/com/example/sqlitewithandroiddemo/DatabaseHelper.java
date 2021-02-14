@@ -36,7 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createTableStatement);
     }
 
-    //This is called whenever the database version changes. It prevents previous users from breaking when you change the database design.
+    //This is called whenever the database version changes. It prevents previous users from breaking when you change the database design.`
     // (Provides for forward/backward compatibility
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -67,7 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<CustomerModel> customerList = new ArrayList<>();
 
         //Get data from the database
-        String queryString = "SELECT * FROM "+TABLE_NAME;
+        String queryString = "SELECT * FROM " + TABLE_NAME; // + " WHERE " + COLUMN_IS_DELETED_CUSTOMER + " = " + isDeleted;
 
         //Cursor is a resultset from an SQL Statement
         Cursor cursor =  db.rawQuery(queryString, null);
@@ -92,5 +92,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return customerList;
+    }
+
+    public boolean deleteOneRecord(CustomerModel customerModel) {
+        //Find customerModel in the database. If it is found, delete and return true.
+        //If it is not found, return false
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String queryString = "DELETE FROM "+ TABLE_NAME + "WHERE" + COLUMN_CUSTOMER_ID + "=" + customerModel.getId();
+
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if(cursor.moveToFirst()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

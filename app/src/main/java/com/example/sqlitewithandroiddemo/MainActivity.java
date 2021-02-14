@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
 
         showCustomerListView(dbh);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         //Add Button click listeners
         btnViewAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,12 +69,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CustomerModel customerModel = null;
+                String customerName = name.getText().toString();
+                String customerAge = age.getText().toString();
+
+                if((customerName == "") || (customerName == null) || (customerName.isEmpty())) {
+                    name.setError("Customer name is required.");
+                    return;
+                }
+
+                if((customerAge == "") || (customerAge == null) || (customerAge.isEmpty())) {
+                    age.setError("Customer age is required.");
+                    return;
+                }
+
                 try {
                     customerModel = new CustomerModel(1, name.getText().toString(), Integer.parseInt(age.getText().toString()), isActive.isChecked());
                     Toast.makeText(getApplicationContext(), customerModel.toString(), Toast.LENGTH_LONG).show();
                 } catch(Exception e) {
                     Toast.makeText(getApplicationContext(), "There was an error creating the customer", Toast.LENGTH_LONG).show();
-                    customerModel = new CustomerModel(-1, "Error", 0, false );
+                    return;
                 }
 
                 DatabaseHelper dbh = new DatabaseHelper(getApplicationContext());
@@ -97,6 +114,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Delete", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        lvCustomerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CustomerModel clickedCustomer = (CustomerModel) parent.getItemAtPosition(position);
+                dbh = new DatabaseHelper(getApplicationContext());
+                dbh.deleteOneRecord(clickedCustomer);
+                showCustomerListView(dbh);
+
+                Toast.makeText(getApplicationContext(), "Deleted"+clickedCustomer.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }

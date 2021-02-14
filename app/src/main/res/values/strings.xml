@@ -6,4 +6,5 @@
     <string name="update_customer">Update Customer</string>
     <string name="delete_customer">Delete Customer</string>
     <string name="is_active">Is Active</string>
+    <string name="add_customer">Add Customer</string>
 </resources>
