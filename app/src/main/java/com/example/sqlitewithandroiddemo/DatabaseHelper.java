@@ -2,11 +2,13 @@ package com.example.sqlitewithandroiddemo;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -59,5 +61,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    
+    public List<CustomerModel> getAllCustomers() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        List<CustomerModel> customerList = new ArrayList<>();
+
+        //Get data from the database
+        String queryString = "SELECT * FROM "+TABLE_NAME;
+
+        //Cursor is a resultset from an SQL Statement
+        Cursor cursor =  db.rawQuery(queryString, null);
+
+        if(cursor.moveToFirst()) {
+            //Loop through the cursor (resultset) and create a new customer object into the returnCustomerList
+            do {
+                int customerId = cursor.getInt(0);
+                String customerName = cursor.getString(1);
+                int customerAge = cursor.getInt(2);
+                boolean isCustomerActive = cursor.getInt(3) == 1 ? true : false;
+
+                CustomerModel customerModel = new CustomerModel(customerId, customerName, customerAge, isCustomerActive);
+                customerList.add(customerModel);
+            } while(cursor.moveToNext());
+        } else {
+            //Failure. Do not add anything to the customerList
+        }
+
+        //Close both the CUrsor and the db when done
+        cursor.close();
+        db.close();
+
+        return customerList;
+    }
 }

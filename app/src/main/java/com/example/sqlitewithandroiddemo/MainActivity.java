@@ -11,6 +11,8 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     //Private class variables
     EditText name, age;
@@ -39,7 +41,11 @@ public class MainActivity extends AppCompatActivity {
         btnViewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "View All", Toast.LENGTH_LONG).show();
+                DatabaseHelper dbh = new DatabaseHelper(getApplicationContext());
+
+                List<CustomerModel> allCustomers = dbh.getAllCustomers();
+
+                Toast.makeText(getApplicationContext(), allCustomers.toString(), Toast.LENGTH_LONG).show();
             }
         });
 
