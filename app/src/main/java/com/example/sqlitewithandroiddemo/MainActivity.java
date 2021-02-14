@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 dbh.deleteOneRecord(clickedCustomer);
                 showCustomerListView(dbh);
 
-                Toast.makeText(getApplicationContext(), "Deleted"+clickedCustomer.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Deleted successfully", Toast.LENGTH_LONG).show();
             }
         });
     }
