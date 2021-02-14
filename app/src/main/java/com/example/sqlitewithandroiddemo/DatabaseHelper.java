@@ -100,7 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String queryString = "DELETE FROM "+ TABLE_NAME + "WHERE" + COLUMN_CUSTOMER_ID + "=" + customerModel.getId();
+        String queryString = "DELETE FROM "+ TABLE_NAME + " WHERE " + COLUMN_CUSTOMER_ID + " = " + customerModel.getId();
 
         Cursor cursor = db.rawQuery(queryString, null);
 
