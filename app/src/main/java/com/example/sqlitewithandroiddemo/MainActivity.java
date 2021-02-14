@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -19,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
     Switch isActive;
     Button btnViewAll, btnAdd, btnUpdate, btnDelete;
     ListView lvCustomerList;
+
+    DatabaseHelper dbh;
+    ArrayAdapter customerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
         lvCustomerList = (ListView) findViewById(R.id.lvCustomerList);
 
+        dbh = new DatabaseHelper(getApplicationContext());
+
+        showCustomerListView(dbh);
+
         //Add Button click listeners
         btnViewAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +53,11 @@ public class MainActivity extends AppCompatActivity {
 
                 List<CustomerModel> allCustomers = dbh.getAllCustomers();
 
-                Toast.makeText(getApplicationContext(), allCustomers.toString(), Toast.LENGTH_LONG).show();
+                //Create an ArrayAdapter
+                customerAdapter = new ArrayAdapter<CustomerModel>(getApplicationContext(), android.R.layout.simple_list_item_1, allCustomers);
+                lvCustomerList.setAdapter(customerAdapter);
+
+                //Toast.makeText(getApplicationContext(), allCustomers.toString(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -66,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if(success) {
                     reload();
+                    showCustomerListView(dbh);
                     Toast.makeText(getApplicationContext(), "Successfully added customer record", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "There was an error adding customer record", Toast.LENGTH_LONG).show();
@@ -92,5 +105,10 @@ public class MainActivity extends AppCompatActivity {
         name.setText("");
         age.setText("");
         isActive.setChecked(false);
+    }
+
+    private void showCustomerListView(DatabaseHelper dbh2) {
+        customerAdapter = new ArrayAdapter<CustomerModel>(getApplicationContext(), android.R.layout.simple_list_item_1, dbh2.getAllCustomers());
+        lvCustomerList.setAdapter(customerAdapter);
     }
 }
